@@ -71,6 +71,24 @@ function deletePosition(posId) {
 
     // Удаляем данные позиции
     delete positions[posId];
+
+    // Обновляем нумерацию всех оставшихся позиций
+    const rows = document.querySelectorAll('#positions-container tr');
+    rows.forEach((row, index) => {
+        const numberCell = row.querySelector('td.position-number div');
+        if (numberCell) {
+            const posId = row.id.replace('position-', '');
+            numberCell.innerHTML = `
+                <input type="checkbox" class="position-checkbox" id="checkbox-${posId}" style="display: none;">
+                <button class="btn btn-danger btn-sm delete-btn" onclick="deletePosition('${posId}')">
+                    <i class="bi bi-trash"></i>
+                </button>
+                ${index + 1}
+            `;
+            positions[posId].number = index + 1;
+        }
+    });
+
     updateGroupsDisplay();
 }
 
